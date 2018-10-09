@@ -14,6 +14,9 @@ import tornado.web
 import tornado.httpclient
 import tornado.httputil
 import tornado.netutil
+import random
+from redis import Redis
+
 
 '''
 请求google会被GFW墙
@@ -25,12 +28,20 @@ PROXY_KEY = 'middle'
 OPEN_PROXY = True
 
 CHECK_TIMEOUT = 60
+redis_client = Redis(host='10.30.1.20')
+proxy_source_map = {
+    'mogumiao': 500,
+    'zdaye': 500,
+    '16yun': 500,
+}
 
 
 def get_proxy():
     if OPEN_PROXY:
-        proxy = 'https://{}'.format('127.0.0.1:8118')
-        return proxy
+        proxy_ip = redis_client.lindex('PROXY:{}'.format('zdaye'), random.randint(0,50))
+        if proxy_ip:
+            proxy = 'https://{}'.format(proxy_ip.decode())
+            return proxy
     else:
         return
 

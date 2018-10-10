@@ -40,7 +40,7 @@ def get_proxy():
     if OPEN_PROXY:
         proxy_ip = redis_client.lindex('PROXY:{}'.format('zdaye'), random.randint(0,50))
         if proxy_ip:
-            proxy = 'https://{}'.format(proxy_ip.decode())
+            proxy = 'http://{}'.format(proxy_ip.decode())
             return proxy
     else:
         return
